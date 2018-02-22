@@ -4,12 +4,19 @@ import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 // import RootNavigation from './navigation/RootNavigation';
 // import AppWithNavigationState from './navigator/AppNavigator';
+
+
 import BaseScreen from './screens/BaseScreen'
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
   };
 
+    async componentWillMount() {
+    await Font.loadAsync({
+      'fontello': require('./assets/fonts/frontello.ttf'),
+    });
+  }
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
@@ -34,8 +41,8 @@ export default class App extends React.Component {
   }
 
   _loadResourcesAsync = async () => {
-    const font = require('./icomoon2/fonts/icomoon2.ttf')
-    console.log('ff',font)
+  //  const font = require('./icomoon2/fonts/icomoon2.ttf')
+   // console.log('ff',font)
     return Promise.all([
       Asset.loadAsync([
         require('./assets/images/robot-dev.png'),
@@ -43,13 +50,15 @@ export default class App extends React.Component {
       ]),
       Font.loadAsync([
         // This is the font that we are using for our tab bar
-        { 'iconmoon2': require('./icomoon2/fonts/icomoon2.ttf') }, //,
+      //  { 'iconmoon2': require('./icomoon2/fonts/icomoon2.ttf') }, //,
 
         Ionicons.font,
         // We include SpaceMono because we use it in HomeScreen.js. Feel free
         // to remove this if you are not using it in your app
         { 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf') }  ,
-        { 'icomoon2': require('./assets/fonts/icomoon2.ttf') }  //,
+        { 'frontello': require('./assets/fonts/frontello.ttf') }  ,
+
+       // { 'icomoon2': require('./assets/fonts/icomoon2.ttf') }  //,
         //,
 
         // { 'helvetica-neue': require('./assets/fonts/HelveticaNeue.ttf') }        

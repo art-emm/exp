@@ -239,9 +239,9 @@ export default class PercentageCircle extends Component {
         {this.renderInnerCircle()}
       </View>
       {showText && <View style={{marginTop: 5, minWidth: this.props.radius * 2}}>
-        <Text style={{fontSize: 14, color: '#15304E', lineHeight: 18}}><Text style={{fontWeight: 'bold'}}>Knowlege:</Text> {knowledge}</Text>
-        <Text style={{fontSize: 14, color: '#15304E', lineHeight: 18}}><Text style={{fontWeight: 'bold'}}>Subject:</Text> {subject}</Text>
         <Text style={{fontSize: 14, color: '#15304E', lineHeight: 18}}><Text style={{fontWeight: 'bold'}}>Words:</Text> {words}</Text>
+        <Text style={{fontSize: 14, color: '#15304E', lineHeight: 18}}><Text style={{fontWeight: 'bold'}}>Knowlege:</Text> {knowledge}</Text>
+        <Text style={{fontSize: 14, color: '#15304E', lineHeight: 18, textOverflow: 'ellipsis', overflow:'hidden', height: 32, whiteSpace: 'nowrap'}}><Text style={{fontWeight: 'bold'}}>Subject:</Text> {subject}</Text>
       </View>}
       </View>
       </TouchableHighlight>

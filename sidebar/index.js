@@ -2,7 +2,7 @@ import React from "react";
 import { Dimensions, AppRegistry, Image, StatusBar,StyleSheet, View } from "react-native";
 import { Container, Content, Text, List, ListItem } from "native-base";
 import CircleItem from '../screens/library/components/circleItem'
-const baseRoutes = ["Registration", "Compilation", "Traning"];
+const baseRoutes = ["Home", "Compilation", "Traning"];
 const futureRoutes = ["Game", "Shop"]
 let ScreenHeight = Dimensions.get("window").height;
 

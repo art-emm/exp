@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   View,
   ScrollView,
+  Button,
   Text,
   Image,
   StyleSheet, TouchableOpacity, 
@@ -25,7 +26,6 @@ class TranslateItem extends Component {
   }
 
   openLibrary () {
-    alert('on nav')
     this.props.onNavigate(this.props.searchText, this.props.value)
   }
   toggleTranslates () {
@@ -37,13 +37,13 @@ class TranslateItem extends Component {
     let { value, lang, searchText = '' } = this.props
     const {showTranslates} = this.state
     let sentenseArr = searchText.split(' ')
-    sentenseArr = sentenseArr? sentenseArr : []
+    sentenseArr = sentenseArr || []
     let words = []
-    sentenseArr = sentenseArr.filter(v=>v!='');
-    if(value && value.alter && Object.keys(value.alter)){
+    sentenseArr = sentenseArr.filter(v => v !== '')
+    if (value && value.alter && Object.keys(value.alter)) {
       words = Object.keys(value.alter)
     }
-    
+
     return (
       <View style={styles.baseRow}>
         <View style={styles.row}>
@@ -66,18 +66,13 @@ class TranslateItem extends Component {
               </View>
             </TouchableWithoutFeedback>
           </View>
-          {/* <View style={styles.addIcon}>
-            <Image
-              source={require('../../../../public/sound.png')}
-          />
-          </View> */}
           <TouchableOpacity onPress={this.openLibrary}>
             <Image onPress={this.openLibrary}
               source={require('../../../../public/add.png')}
           />
           </TouchableOpacity>
         </View>
-        {showTranslates && 
+        {showTranslates &&
         <View style={styles.synWrapper}>
           <View style={styles.synHeaderRow}>
             <View style={styles.synIconWrapper}>
@@ -87,23 +82,22 @@ class TranslateItem extends Component {
           </View>
           {sentenseArr.map((word, i) => {
             return (
-              <View key={i} style={styles.synRow}>
-                <View style={styles.synIconWrapper}>
-                  <View style={styles.lineSmall} />
-                  <View style={styles.point} />
-                  <View style={styles.line} />
-                </View>
-                <View style={styles.synTextWrapper}>
-                  <Text style={styles.synTextHeader}>{word }</Text>
-                  <Text style={styles.synTextContent} >{value.alter && value.alter[word] && value.alter[word].join(', ')}</Text>
-                </View>
+              <View key={i} style={styles.synRow} onPress={()=> {alert()}}>
+                  <View style={styles.synIconWrapper}>
+                    <View style={styles.lineSmall} />
+                    <View style={styles.point} />
+                    <View style={styles.line} />
+                  </View>
+                  <View style={styles.synTextWrapper}>
+                    <Text style={styles.synTextHeader}>{word }</Text>
+                    <Text style={styles.synTextContent} >{value.alter && value.alter[word] && value.alter[word].join(', ')}</Text>
+                  </View>
               </View>
             )
           })}
           <View style={styles.synHeaderRow}>
             <View style={styles.synIconWrapper}>
             <View style={styles.lineSmall} />
-
               <View style={styles.lineHorizontal} />
             </View>
           </View>
