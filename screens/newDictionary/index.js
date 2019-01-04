@@ -6,6 +6,8 @@ import {Header, BaseHeader} from '../../components'
 const uniqueId = require('react-native-unique-id')
 import {Platform, Dimensions} from 'react-native'
 import PhotoGrid from 'react-native-thumbnail-grid'
+import _ from 'lodash'
+
 import {
   ScrollView,
   View,
@@ -24,18 +26,24 @@ class Library extends Component {
     super()
     this.state = {
       dictionaries: [],
-      showImages: true,
+      showImages: false,
       images: [],
       selectedImage: ''
     }
     this.save = this.save.bind(this)
   }
+
+    
   handleChange = async (text) => {
     const {showImages} = this.state
-    //if (key === 'title') {
-    showImages && this.setState({image: await this.getImage(text), text})
-    //}
-    !showImages && this.setState({text})
+    if(showImages) {
+      const image = await this.getImage(text)
+
+      this.setState({image, text})
+    }
+    if(!showImages){
+      this.setState({text})
+    }
   }
 
   getImage = (title) => {
@@ -43,6 +51,7 @@ class Library extends Component {
       .then((response) => response.json())
       .then((responseJson) => {
         const images = responseJson.results.map(i => i.urls.small)
+        console.log(images)
         this.setState({images})
       })
       .catch((error) => {
@@ -84,9 +93,10 @@ class Library extends Component {
   setImage = (selectedImage) => {
     this.setState({selectedImage, showImages: false})
   }
+
   render () {
-    const {image = '', showImages, images, selectedImage} = this.state
-    console.log('data >', images)
+    const {image = '', showImages, images, selectedImage = null} = this.state
+    console.log(selectedImage)
     return <View style={{flex: 1}}>
       <BaseHeader title='Library' navigation={this.props.navigation}/>
       <View style={{flex:1, alignItems: 'center', paddingLeft: 20, paddingRight: 20}}>
@@ -102,24 +112,26 @@ class Library extends Component {
         borderWidth={8}
         color='#3399FF'
         shadowColor='#fff'
-        uri={selectedImage || defaultImage}
+        uri={selectedImage}
+        svg
         isNew
         showText={0}
-        onPress={()=>{this.setState({showImages: true})}}
-       // innerCircleColor='#15304E'
+        onPress={async () => { 
+          await this.getImage(this.state.text); 
+          this.setState({showImages: true}) 
+        }}
       />
         <View style={styles.text}>
           <View style={styles.textRow}>
-            <Text style={styles.mainText}>Knowledge</Text><Text style={styles.secondText}> 0%</Text>
+            <Text style={styles.mainText}>Knowledge:</Text><Text style={styles.secondText}>0%</Text>
           </View>
           <View style={styles.textRow}>
-            <Text style={styles.mainText}>Subject</Text><Text style={styles.secondText}>{' ' + this.state.title || '...'}</Text>
+            <Text style={styles.mainText}>Subject:</Text><Text style={styles.secondText}>{' ' + (this.state.title || '...')}</Text>
           </View>
           <View style={styles.textRow}>
-            <Text style={styles.mainText}>Words</Text><Text style={styles.secondText} > 0</Text>
+            <Text style={styles.mainText}>Words:</Text><Text style={styles.secondText}>0</Text>
           </View>
         </View>
-
       </View>
 
 
@@ -151,7 +163,6 @@ class Library extends Component {
           width={320}
           onPressImage={uri => this.setImage(uri)}
         />
-
         </View>}
     </View>
     </View>

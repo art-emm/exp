@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react'
-import { StyleSheet, View, Text, ViewPropTypes, Image, TouchableHighlight } from 'react-native'
+import { StyleSheet, View, Text, ViewPropTypes, Image, TouchableHighlight, TouchableWithoutFeedback } from 'react-native'
+
+import SvgUri from 'react-native-svg-uri'
 
 // compatability for react-native versions < 0.44
 const ViewPropTypesStyle = ViewPropTypes
@@ -34,13 +36,13 @@ function percentToDegrees(percent) {
 
 export default class PercentageCircle extends Component {
   static propTypes = {
-    color: PropTypes.string,
-    shadowColor: PropTypes.string,
-    bgColor: PropTypes.string,
-    radius: PropTypes.number.isRequired,
-    borderWidth: PropTypes.number,
-    children: PropTypes.node,
-    containerStyle: ViewPropTypesStyle,
+    // color: PropTypes.string,
+    // shadowColor: PropTypes.string,
+    // bgColor: PropTypes.string,
+    // radius: PropTypes.number.isRequired,
+    // borderWidth: PropTypes.number,
+    // children: PropTypes.node,
+    // containerStyle: ViewPropTypesStyle,
   };
 
   static defaultProps = {
@@ -130,6 +132,33 @@ export default class PercentageCircle extends Component {
   renderInnerCircle() {
     const radiusMinusBorder = this.props.radius - this.props.borderWidth
     const radiusMinusBorder2 = this.props.radius - this.props.borderWidth - 4
+    let PngImage = null
+    // if(!this.props.svg) {
+    //   if(this.props.uri.includes('http')) {
+    //     PngImage = <Image resizeMode={'cover'}
+    //       style={{
+    //         width: radiusMinusBorder2 * 4,
+    //         height: radiusMinusBorder2 * 4,
+    //         borderRadius: radiusMinusBorder,
+    //         backgroundColor: 'transparent',
+    //         resizeMode: "cover"            
+    //       }}
+    //       source={{ uri: this.props.uri}}
+    //     />
+    //   } else {
+    //     console.log(23)
+    //     PngImage = (<Image resizeMode={'cover'}
+    //       style={{
+    //         width: radiusMinusBorder2 * 4,
+    //         height: radiusMinusBorder2 * 4,
+    //         borderRadius: radiusMinusBorder,
+    //         backgroundColor: 'transparent',
+    //         resizeMode: "cover"            
+    //       }}
+    //       source={require('../../../../assets/images/userAvatar.png')}
+    //     />)
+    //   }
+    // }
     return (
       <View
         style={[
@@ -161,15 +190,49 @@ export default class PercentageCircle extends Component {
             ...this.props.containerStyle,
           },
         ]}>
-          <Image resizeMode={'cover'} style={{
+        {!this.props.svg && 
+          !this.props.uri.includes('http') &&
+          <Image resizeMode={'cover'}
+          style={{
+            width: radiusMinusBorder2 * 2,
+            height: radiusMinusBorder2 * 2,
+            borderRadius: radiusMinusBorder,
+            backgroundColor: 'transparent',
+            resizeMode: "cover"            
+          }}
+          source={require(`../../../../assets/images/userAvatar.png`)}
+        />}
+          {!this.props.svg && this.props.uri.includes('http') &&
+          <Image resizeMode={'cover'}
+            style={{
             width: radiusMinusBorder2 * 4,
             height: radiusMinusBorder2 * 4,
             borderRadius: radiusMinusBorder,
             backgroundColor: 'transparent',
             resizeMode: "cover"            
           }}
-            source={{ uri: this.props.uri}}
-          />   
+          source={this.props.uri ? { uri: this.props.uri} : require('../../../../assets/images/addIcon.svg')}
+          />}
+          {!!this.props.svg && !!this.props.uri &&
+          <Image resizeMode={'cover'}
+            style={{
+            width: radiusMinusBorder2 * 4,
+            height: radiusMinusBorder2 * 4,
+            borderRadius: radiusMinusBorder,
+            backgroundColor: 'transparent',
+            resizeMode: "cover"            
+          }}
+          source={this.props.uri ? { uri: this.props.uri} : require('../../../../assets/images/addIcon.svg')}
+          />}
+        {
+          this.props.svg && <SvgUri
+          width={radiusMinusBorder2 * 1.5}
+          height={radiusMinusBorder2 * 1.5}
+          fill='#46C3CF'
+          source={require('../../../../assets/images/addIcon.svg')}
+        />
+        } 
+        
         </View>
       </View>
     )
@@ -189,24 +252,14 @@ export default class PercentageCircle extends Component {
       textH = 0
     }
     return (
-      <TouchableHighlight
-        onPress={this.onPress.bind(this)} style={[
-        styles.outerCircle,
+      <View
+         style={[
         {
-          flex:1,
-          // alignItems: 'flexStart',
-          // justifyContent: 'flexStart',
-          minWidth: this.props.radius * 2,
-          maxWidth: this.props.radius * 2 + 2,          
-          maxHeight: this.props.radius * 2 + this.props.radius * 2,
-          backgroundColor: this.props.shadowColor,
-          borderRadius: 10,
-         // marginRight: 15,
-         //borderWidth: 1,
-          marginBottom: 0,
-          borderColor: '#95989A'
+          minHeight: showText ? 170 : 100 
         },
-      ]}>
+      ]}
+      >
+      <TouchableWithoutFeedback onPress={this.onPress.bind(this)}>
       <View style={[
         styles.outerCircle,
         {
@@ -241,10 +294,11 @@ export default class PercentageCircle extends Component {
       {showText && <View style={{marginTop: 5, minWidth: this.props.radius * 2}}>
         <Text style={{fontSize: 14, color: '#15304E', lineHeight: 18}}><Text style={{fontWeight: 'bold'}}>Words:</Text> {words}</Text>
         <Text style={{fontSize: 14, color: '#15304E', lineHeight: 18}}><Text style={{fontWeight: 'bold'}}>Knowlege:</Text> {knowledge}</Text>
-        <Text style={{fontSize: 14, color: '#15304E', lineHeight: 18, textOverflow: 'ellipsis', overflow:'hidden', height: 32, whiteSpace: 'nowrap'}}><Text style={{fontWeight: 'bold'}}>Subject:</Text> {subject}</Text>
+        <Text numberOfLines={2} style={{fontSize: 14, color: '#15304E', lineHeight: 18, overflow:'hidden', height: 35}}><Text style={{fontWeight: 'bold'}}>Subject:</Text> {subject}</Text>
       </View>}
       </View>
-      </TouchableHighlight>
+      </TouchableWithoutFeedback>
+      </View>
     )
   }
 }

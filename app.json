@@ -4,7 +4,7 @@
     "description": "No description",
     "slug": "wordsexpo",
     "privacy": "public",
-    "sdkVersion": "21.0.0",
+    "sdkVersion": "27.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
@@ -19,9 +19,14 @@
     "packagerOpts": {
       "assetExts": ["ttf"]
     },
+    "splash": {
+      "image": "./assets/images/appLogo@3x.png",
+      "backgroundColor": "#15304E"
+    },
     "ios": {
       "bundleIdentifier": "com.sk3vy.new-project-template",
       "supportsTablet": true
     }
   }
 }
+

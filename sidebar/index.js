@@ -1,15 +1,37 @@
-import React from "react";
-import { Dimensions, AppRegistry, Image, StatusBar,StyleSheet, View } from "react-native";
-import { Container, Content, Text, List, ListItem } from "native-base";
+import React from 'react';
+import { Dimensions, AppRegistry, Image, StatusBar, StyleSheet, View, AsyncStorage } from 'react-native';
+import { Container, Content, Text, List, ListItem } from 'native-base'
 import CircleItem from '../screens/library/components/circleItem'
-const baseRoutes = ["Home", "Compilation", "Traning"];
-const futureRoutes = ["Game", "Shop"]
-let ScreenHeight = Dimensions.get("window").height;
+const baseRoutes = ['Home', 'Compilation', 'Traning']
+const futureRoutes = ['Game', 'Shop']
+let ScreenHeight = Dimensions.get('window').height;
+import { AuthSession } from 'expo';
 
+const FB_APP_ID = '560104297698065'
 export default class SideBar extends React.Component {
-  render() {
-    let ScreenHeight = Dimensions.get("window").height;
 
+  constructor () {
+    super()
+    this.state = {
+      fbInfo: { name: 'Unknown user', picture: {data: {url: ''}}}
+    }
+  }
+  async componentDidMount(){
+    let fbInfo = await AsyncStorage.getItem('fbInfo');
+
+    if(fbInfo) {
+      fbInfo = JSON.parse(fbInfo)
+      console.log(fbInfo)
+      this.setState({fbInfo})
+    }
+  }
+
+  render() {
+    let ScreenHeight = Dimensions.get('window').height;
+    // const fbId = await AsyncStorage.setItem('@expoStorage:fbId');
+    // const fbName = await AsyncStorage.setItem('@expoStorage:fbName') || 'Unknown';
+    // const fbImage = await AsyncStorage.setItem('@expoStorage:fbImage');
+    const { fbInfo } = this.state
     return (
       <Container style={styles.wrapper}>
         <View style={styles.content}>
@@ -34,14 +56,14 @@ export default class SideBar extends React.Component {
                   borderWidth={8}
                   color='#3399FF'
                   shadowColor='#fff'
-                  uri={'https://develop.backendless.com/76F8A504-3B6A-6FB4-FF49-80D009895D00/console/rybybqdyapoojmimusnrjbqxqxilcgfdirmr/files/view/public/Group%201@3x.png'}
+                  uri={fbInfo.picture.data.url}
                   isNew
                   showText={false}
                 />
               </View>
               <View style={styles.titles}>
                 <View style={styles.row} >
-                  <Text style={styles.userName}>Unknown user</Text>
+                  <Text style={styles.userName}>{fbInfo.name}</Text>
                 </View>
                 <View style={styles.row}>
                   <Text style={styles.h}>Native Language</Text>
@@ -58,11 +80,19 @@ export default class SideBar extends React.Component {
               {baseRoutes.map(r => 
                 <Text key={r}
                   style={styles.baseItem}
-                  onPress={() => this.props.navigation.navigate('Home')}
+                  onPress={() => this.props.navigation.navigate(r)}
                 >
                   {r}
                 </Text>
               )}
+              {fbInfo.name === 'Unknown user' && <Text style={styles.baseItem}
+                  onPress={this._fbLogin}>
+                  Login with Facebook
+              </Text>}
+              {fbInfo.name !== 'Unknown user'  && <Text style={styles.baseItem}
+                  onPress={this._fbLogout}>
+                  Logout
+              </Text>}
             </View>
             <View style={styles.futureItems}>
               {futureRoutes.map(r => 
@@ -79,7 +109,40 @@ export default class SideBar extends React.Component {
       </Container>
     );
   }
+
+  _fbLogin = async () => {
+    let redirectUrl = AuthSession.getRedirectUrl();
+    console.log({ redirectUrl });
+    let result = await AuthSession.startAsync({
+      authUrl:
+        `https://www.facebook.com/v2.8/dialog/oauth?response_type=token` +
+        `&client_id=${FB_APP_ID}` +
+        `&redirect_uri=${encodeURIComponent(redirectUrl)}`,
+    });
+
+    if (result.type !== 'success') {
+      //alert('Uh oh, something went wrong');
+      return;
+    }
+
+    let accessToken = result.params.access_token;
+    let userInfoResponse = await fetch(
+      `https://graph.facebook.com/me?access_token=${accessToken}&fields=id,name,picture.type(large)`
+    );
+    const fbInfo = await userInfoResponse.json();
+    AsyncStorage.setItem('fbInfo', JSON.stringify(fbInfo));
+
+    this.setState({ fbInfo });
+  };
+
+  _fbLogout = () => {
+    AsyncStorage.setItem('fbInfo', '');
+    this.setState({
+      fbInfo: { name: 'Unknown user', picture: {data: {url: ''}}}
+    })
+  }
 }
+
 const styles = StyleSheet.create({
   futureItem: {
     flex: 1,
@@ -108,10 +171,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: 'violet',
     borderTopColor: '#46C3CF',
-    maxHeight: 150
+    maxHeight: 175
   },
   row: {
-    marginBottom: 15
+    marginBottom: 10
   },
   hs: {
     fontSize: 12,
@@ -122,13 +185,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#95989A',
     textDecorationColor: '#95989A',
-    fontWeight: "600"
+    fontWeight: '600'
   },
   userName: {
     fontSize: 13,
     color: '#15304E',
     textDecorationColor: '#15304E',
-    fontWeight: "600"
+    fontWeight: '600'
   },
   titles: {
     flex: 1,
@@ -144,9 +207,9 @@ const styles = StyleSheet.create({
     maxHeight: 110
   },
   wrapper: {
-    borderRadius : 20,
-    //xborderWidth: 2
-   // backgroundColor: 'red'
+    borderTopRightRadius : 20,
+    borderBottomRightRadius: 20,
+    backgroundColor: 'white',
   },
   content: {
     flex:1,

@@ -97,7 +97,11 @@ class Library extends Component {
     const {image = '', showImages, images, selectedImage, words, dictionary={}} = this.state
     return <View style={{flex: 1}}>
       <BaseHeader title='Library' navigation={this.props.navigation}/>
-      <View style={{flex:1, alignItems: 'center', paddingLeft: 20, paddingRight: 20}}>
+      <View style={{
+        flex:1, 
+        alignItems: 'center', 
+        paddingLeft: 20,
+        paddingRight: 20}}>
       <Header title='My subject' />
       <View style={styles.topRow}>
       <CircleItem 
@@ -121,10 +125,10 @@ class Library extends Component {
             <Text style={styles.mainText}>Knowledge:</Text><Text style={dictionary.knowledge}> 0%</Text>
           </View>
           <View style={styles.textRow}>
-            <Text style={styles.mainText}>Subject:</Text><Text style={styles.secondText}>{' '+dictionary.title|| '...'}</Text>
+            <Text style={styles.mainText}>Subject:</Text><Text style={styles.secondText}>{' ' + (!!dictionary.title || '...')}</Text>
           </View>
           <View style={styles.textRow}>
-            <Text style={styles.mainText}>Words:</Text><Text style={styles.secondText} >{' '+dictionary.words || ' 0'}</Text>
+            <Text style={styles.mainText}>Words:</Text><Text style={styles.secondText} >{' ' + (dictionary.words || '0')}</Text>
           </View>
         </View>
 
@@ -141,16 +145,20 @@ class Library extends Component {
       </TouchableHighlight>
       </View>}
       <View style={styles.synWrapper}>
-          <View style={styles.synHeaderRow}>
+          {words.length > 0 && <View style={styles.synHeaderRow}>
             <View style={styles.synIconWrapper}>
               <View style={styles.topCircle}>
                
-              <Image style={styles.dotsIcon} source={require('../../public/dots.png')} />
-              
+              <SvgUri
+                width={18}
+                height={18}
+                fill='#46C3CF'
+                source={require('../../assets/images/addIcon.svg')}
+              />              
               </View>
               <View style={styles.lineSmall} />
             </View>
-          </View>
+          </View>}
           {words.map((t, i) => {
             return (
               <View key={i} style={styles.synRow}>
@@ -166,13 +174,13 @@ class Library extends Component {
               </View>
             )
           })}
-          <View style={styles.synHeaderRow}>
+          {words.length > 0 && <View style={styles.synHeaderRow}>
             <View style={styles.synIconWrapper}>
             <View style={styles.lineSmall} />
 
               <View style={styles.lineHorizontal} />
             </View>
-          </View>
+          </View>}
         </View>
       {showImages && <View>
         <PhotoGrid 
@@ -204,12 +212,13 @@ const styles = StyleSheet.create({
   },
 
   topCircle: {
-    marginLeft: 1,
-    width: 25,
-    height: 25,
+    width: 24,
+    height: 24,
     borderRadius: 30,
     borderColor: '#95989A',
-    borderWidth: 1
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent:'center'
   }, 
   lineHorizontal: {
     marginLeft: 1,
@@ -220,7 +229,7 @@ const styles = StyleSheet.create({
 
   lineSmall: {
     width: 1,
-    height: 5,
+    height: 8,
     // borderWidth: 1, 
     backgroundColor: '#95989A'
   },

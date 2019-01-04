@@ -1,45 +1,106 @@
 import React, { Component } from 'react'
-import { StyleSheet, Dimensions } from 'react-native'
-import { Left, Icon, Right, Button, Body, Header, Text } from 'native-base'
+import { StyleSheet, Dimensions, Text, View, TouchableWithoutFeedback } from 'react-native'
+import { Left, Icon, Right, Button, Body, Header } from 'native-base'
 import { createIconSetFromFontello } from 'react-native-vector-icons'
 import fontelloConfig from './config.json'
-  
+import SvgUri from 'react-native-svg-uri'
+
 const RightMenu = createIconSetFromFontello(fontelloConfig)
 const deviceWidth = Dimensions.get('window').width
-class BaseHeader extends Component {
+const onePercent = deviceWidth/100;
 
+class BaseHeader extends Component {
   render () {
-    console.log('>>>', this.props.navigation)
     return (
       <Header style={styles.BaseHeader}>
-        <Left style={{minWidth: deviceWidth}}>
-          <Button
+      <Left>
+      <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate('DrawerOpen')}>
+
+          <View style={styles.left}>
+
+            <SvgUri
+              width={20}
+              height={21}
+              fill='#46C3CF'
+              source={require('../../tmpImages/menu_1.svg')}
+            />
+          </View>
+          </TouchableWithoutFeedback>
+
+          </Left>
+          <Body>
+          <SvgUri width='60'
+              height={35}
+              fill='#FFFFFF'
+            source={require('../../assets/images/logo.svg')}
+          />
+          </Body>
+          <Right>
+          <TouchableWithoutFeedback
+            onPress={() => this.props.navigation.navigate('Library')}>
+          <View style={styles.right}>
+         
+            <SvgUri 
+              width={33}            
+              height={34}
+              source={require('../../tmpImages/men_2.svg')}
+            />
+          </View>
+          </TouchableWithoutFeedback>
+
+          </Right>
+
+
+          {/* <Button style={{borderWidth:1, borderColor:'#15304E'}}
             transparent
             onPress={() => this.props.navigation.navigate('DrawerOpen')}>
-            <Icon name='menu' />
+           <SvgUri
+            width={60}
+            height={20}
+            fill='#46C3CF'
+            source={require('../../tmpImages/menu_1.svg')}
+          />
           </Button>
-        </Left>
-        <Body />
-        <Right>
-          <Button
+          <SvgUri width='60'
+            height='60'
+            fill='#FFFFFF'
+            source={require('../../assets/images/logo.svg')}
+          />
+          <TouchableWithoutFeedback
             transparent
             onPress={() => this.props.navigation.navigate('Library')}
-            style={{width: deviceWidth * 0.21}}>
+            style={{borderWidth: 1}}>
             <RightMenu
               name='headericon'
-              size={20}
+              size={26}
               color='#46C3CF' />
-          </Button>
-        </Right>
+          </Button> */}
       </Header>)
   }
 }
 
 const styles = StyleSheet.create({
+  left: {
+    // borderWidth: 1,
+    justifyContent: 'flex-end',
+    marginLeft: onePercent * 3.6,
+    height: 30,
+  },
+  right: {
+    // borderWidth: 1,
+    alignItems: 'flex-end',
+    marginRight: onePercent * 3.6,
+    paddingRight: 0,
+    height: 30,
+    marginTop: 5
+  },
   BaseHeader: {
-    borderWidth: 1,
+    // borderWidth:1,
+    // borderColor: 'red',
     width: deviceWidth,
-    backgroundColor: '#15304E'
+    backgroundColor: '#15304E',
+    justifyContent: 'flex-end',
+    paddingBottom: 3
   },
   headerTitleText: {
     flex: 1,

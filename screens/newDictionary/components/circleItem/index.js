@@ -34,14 +34,14 @@ function percentToDegrees(percent) {
 
 export default class PercentageCircle extends Component {
   static propTypes = {
-    color: PropTypes.string,
-    shadowColor: PropTypes.string,
-    bgColor: PropTypes.string,
-    radius: PropTypes.number.isRequired,
-    borderWidth: PropTypes.number,
-    percent: PropTypes.number.isRequired, // eslint-disable-line react/no-unused-prop-types
-    children: PropTypes.node,
-    containerStyle: ViewPropTypesStyle,
+    // color: PropTypes.string,
+    // shadowColor: PropTypes.string,
+    // bgColor: PropTypes.string,
+    // radius: PropTypes.number.isRequired,
+    // borderWidth: PropTypes.number,
+    // percent: PropTypes.number.isRequired, // eslint-disable-line react/no-unused-prop-types
+    // children: PropTypes.node,
+    // containerStyle: ViewPropTypesStyle,
   };
 
   static defaultProps = {
